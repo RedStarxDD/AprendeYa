@@ -4,7 +4,6 @@ import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.google.firebase.auth.FirebaseUser
 import com.usil.aprendeya.data.response.LoginResult
 import com.usil.aprendeya.domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
@@ -13,10 +12,6 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth
 ) : AuthRepository {
-    override suspend fun register(email: String, password: String) {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun login(email: String, password: String): LoginResult {
         return try {
             auth.signInWithEmailAndPassword(email, password).await()
