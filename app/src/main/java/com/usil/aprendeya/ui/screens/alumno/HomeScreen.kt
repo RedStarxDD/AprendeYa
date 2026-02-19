@@ -1,7 +1,6 @@
 package com.usil.aprendeya.ui.screens.alumno
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
 import com.usil.aprendeya.data.model.Curso
+import com.usil.aprendeya.ui.screens.components.LoadingCircle
 import com.usil.aprendeya.ui.theme.Boton
 import com.usil.aprendeya.viewModel.alumno.HomeViewModel
 
@@ -42,6 +41,7 @@ fun HomeScreen(viewModel: HomeViewModel, paddingValues: PaddingValues) {
             .padding(paddingValues)
     ) {
         LaunchedEffect(Unit) {
+            viewModel.getCursos()
             viewModel.event.collect {}
         }
         Text(
@@ -92,20 +92,7 @@ fun CursoList(viewModel: HomeViewModel) {
     val isLoading: Boolean by viewModel.isLoading.collectAsState()
 
     if (isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(Modifier.padding(4.dp))
-            Text(
-                text = "Cargando lista de cursos",
-                color = Boton,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        LoadingCircle("Cargando lista de cursos")
     } else {
         LazyColumn(
             modifier = Modifier

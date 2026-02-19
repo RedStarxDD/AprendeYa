@@ -2,7 +2,6 @@ package com.usil.aprendeya.ui.screens.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -35,7 +33,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
-import com.usil.aprendeya.ui.theme.Boton
+import com.usil.aprendeya.ui.screens.components.LoadingCircle
 import com.usil.aprendeya.ui.theme.VerdeOscuro
 import com.usil.aprendeya.viewModel.login.LoginViewModel
 import kotlinx.coroutines.launch
@@ -69,20 +67,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
     val coroutineScope = rememberCoroutineScope()
 
     if (isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(Modifier.padding(4.dp))
-            Text(
-                text = "Iniciando sesión",
-                color = Boton,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        LoadingCircle("Iniciando sesión")
     } else {
         Column(modifier = modifier) {
             Title(Modifier.align(Alignment.CenterHorizontally))
@@ -93,8 +78,8 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(8.dp))
             PasswordField(password) { viewModel.onLoginChanged(email, it) }
             ErrorMessage(loginError)
-            Spacer(modifier = Modifier.padding(4.dp))
-            ForgotPassword(Modifier.align(Alignment.End))
+            /*Spacer(modifier = Modifier.padding(4.dp))
+            ForgotPassword(Modifier.align(Alignment.End))*/
             Spacer(modifier = Modifier.padding(16.dp))
             LoginButton(Modifier.align(Alignment.CenterHorizontally), loginEnabled) {
                 coroutineScope.launch {

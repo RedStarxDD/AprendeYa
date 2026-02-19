@@ -2,11 +2,9 @@ package com.usil.aprendeya.ui.screens.alumno
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -36,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
 import com.usil.aprendeya.data.model.Tutoria
-import com.usil.aprendeya.ui.theme.Boton
+import com.usil.aprendeya.ui.screens.components.LoadingCircle
 import com.usil.aprendeya.ui.theme.RojoOscuro
 import com.usil.aprendeya.viewModel.alumno.TutoriaViewModel
 
@@ -100,20 +97,7 @@ private fun TutoriaLista(viewModel: TutoriaViewModel) {
     val context = LocalContext.current
 
     if (isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(Modifier.padding(4.dp))
-            Text(
-                text = "Cargando lista de videos",
-                color = Boton,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        LoadingCircle("Cargando lista de videos")
     } else {
         LazyColumn(
             modifier = Modifier

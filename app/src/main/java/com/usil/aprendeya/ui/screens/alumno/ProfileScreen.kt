@@ -1,18 +1,15 @@
 package com.usil.aprendeya.ui.screens.alumno
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
+import com.usil.aprendeya.ui.screens.components.LoadingCircle
 import com.usil.aprendeya.ui.screens.login.HeaderImg
-import com.usil.aprendeya.ui.theme.Boton
 import com.usil.aprendeya.ui.theme.RojoOscuro
 import com.usil.aprendeya.viewModel.alumno.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -64,20 +61,7 @@ fun Logout(modifier: Modifier, viewModel: ProfileViewModel) {
     val coroutineScope = rememberCoroutineScope()
 
     if (isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-            Spacer(Modifier.padding(4.dp))
-            Text(
-                text = "Cerrando sesión",
-                color = Boton,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+        LoadingCircle("Cerrando sesión")
     } else {
         Column(
             modifier = modifier
