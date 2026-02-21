@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
 import com.usil.aprendeya.data.model.Curso
+import com.usil.aprendeya.ui.screens.components.EmptyContent
 import com.usil.aprendeya.ui.screens.components.LoadingCircle
+import com.usil.aprendeya.ui.screens.components.TitleInstructions
 import com.usil.aprendeya.ui.theme.Boton
 import com.usil.aprendeya.viewModel.alumno.HomeViewModel
 
@@ -44,44 +46,11 @@ fun HomeScreen(viewModel: HomeViewModel, paddingValues: PaddingValues) {
             viewModel.getCursos()
             viewModel.event.collect {}
         }
-        Text(
-            text = "Mis cursos",
-            fontSize = 36.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(12.dp)
+        TitleInstructions(
+            "Mis cursos",
+            "Bienvenido a este segmento, en donde aprenderás a desarrollar tus conocimientos.",
+            "Escoge un curso y comencemos esta aventura:"
         )
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .align(Alignment.CenterVertically)
-                    .padding(12.dp)
-            ) {
-                Text(
-                    text = "Bienvenido a este segmento, en donde aprenderás a desarrollar tus conocimientos.",
-                    textAlign = TextAlign.Center,
-                    maxLines = 3
-                )
-                Text(
-                    text = "Escoge un curso y comencemos esta aventura:",
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    maxLines = 2
-                )
-            }
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .size(125.dp)
-                    .weight(0.35f)
-                    .padding(end = 12.dp)
-            )
-        }
         CursoList(viewModel)
     }
 }
@@ -94,14 +63,18 @@ fun CursoList(viewModel: HomeViewModel) {
     if (isLoading) {
         LoadingCircle("Cargando lista de cursos")
     } else {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        ) {
-            items(cursos.value) { curso ->
-                CursoItem(curso) {
-                    viewModel.onCursoItemSelected(curso)
+        if (cursos.value.isEmpty()) {
+            EmptyContent("No hay cursos disponibles")
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+            ) {
+                items(cursos.value) { curso ->
+                    CursoItem(curso) {
+                        viewModel.onCursoItemSelected(curso)
+                    }
                 }
             }
         }

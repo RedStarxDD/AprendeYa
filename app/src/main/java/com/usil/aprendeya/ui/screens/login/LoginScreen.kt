@@ -25,7 +25,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,6 +32,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
+import com.usil.aprendeya.ui.screens.components.HeaderImg
 import com.usil.aprendeya.ui.screens.components.LoadingCircle
 import com.usil.aprendeya.ui.theme.VerdeOscuro
 import com.usil.aprendeya.viewModel.login.LoginViewModel
@@ -194,15 +194,5 @@ fun LogoImg(modifier: Modifier) {
         painter = painterResource(id = R.drawable.logo),
         contentDescription = "Logo",
         modifier = modifier.size(125.dp)
-    )
-}
-
-@Composable
-fun HeaderImg() {
-    Image(
-        painter = painterResource(id = R.drawable.portada_login),
-        contentDescription = "Encabezado",
-        contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxWidth()
     )
 }

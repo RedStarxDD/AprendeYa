@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.usil.aprendeya.data.model.Curso
 import com.usil.aprendeya.domain.repository.CursoRepository
-import com.usil.aprendeya.ui.screens.components.NavigationEvent
+import com.usil.aprendeya.ui.screens.components.AppEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _event = MutableSharedFlow<NavigationEvent>()
+    private val _event = MutableSharedFlow<AppEvent>()
     val event = _event.asSharedFlow()
 
     fun getCursos() = viewModelScope.launch {
@@ -35,7 +35,6 @@ class HomeViewModel @Inject constructor(
     }
 
     fun onCursoItemSelected(curso: Curso) = viewModelScope.launch {
-        _event.emit(NavigationEvent.ToCurso(curso))
-        Log.e("home", curso.nombre.orEmpty())
+        _event.emit(AppEvent.ToCurso(curso))
     }
 }

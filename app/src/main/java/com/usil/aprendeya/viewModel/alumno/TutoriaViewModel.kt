@@ -1,13 +1,11 @@
 package com.usil.aprendeya.viewModel.alumno
 
-import android.content.Context
-import android.content.Intent
-import androidx.core.net.toUri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.usil.aprendeya.data.model.Tutoria
 import com.usil.aprendeya.domain.repository.CursoRepository
-import com.usil.aprendeya.ui.screens.components.NavigationEvent
+import com.usil.aprendeya.ui.screens.components.AppEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +24,7 @@ class TutoriaViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _event = MutableSharedFlow<NavigationEvent>()
+    private val _event = MutableSharedFlow<AppEvent>()
     val event = _event.asSharedFlow()
 
     fun getTutorias(idCurso: String) = viewModelScope.launch {
@@ -36,10 +34,7 @@ class TutoriaViewModel @Inject constructor(
         _isLoading.value = false
     }
 
-    fun openYoutubeLink(context: Context, url: String) {
-        if (url.isNotBlank()) {
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            context.startActivity(intent)
-        }
+    fun onTutoriaClicked(url: String) = viewModelScope.launch {
+        _event.emit(AppEvent.OpenLink(url))
     }
 }

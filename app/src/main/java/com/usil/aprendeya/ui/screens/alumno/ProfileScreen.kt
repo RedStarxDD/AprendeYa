@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.usil.aprendeya.R
+import com.usil.aprendeya.ui.screens.components.HeaderImg
 import com.usil.aprendeya.ui.screens.components.LoadingCircle
-import com.usil.aprendeya.ui.screens.login.HeaderImg
 import com.usil.aprendeya.ui.theme.RojoOscuro
 import com.usil.aprendeya.viewModel.alumno.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -44,14 +44,15 @@ fun ProfileScreen(
         LaunchedEffect(Unit) {
             viewModel.event.collect {}
         }
-    }
-    HeaderImg()
-    Box(
-        Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Logout(Modifier.align(Alignment.Center), viewModel)
+
+        HeaderImg()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Logout(Modifier.align(Alignment.Center), viewModel)
+        }
     }
 }
 

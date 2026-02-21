@@ -3,7 +3,7 @@ package com.usil.aprendeya.viewModel.alumno
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.usil.aprendeya.domain.repository.AuthRepository
-import com.usil.aprendeya.ui.screens.components.NavigationEvent
+import com.usil.aprendeya.ui.screens.components.AppEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +20,13 @@ class ProfileViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _event = MutableSharedFlow<NavigationEvent>()
+    private val _event = MutableSharedFlow<AppEvent>()
     val event = _event.asSharedFlow()
 
     fun logout() = viewModelScope.launch {
         _isLoading.value = true
         authRepository.logout()
-        _event.emit(NavigationEvent.ToLogin)
+        _event.emit(AppEvent.ToLogin)
         _isLoading.value = false
     }
 }

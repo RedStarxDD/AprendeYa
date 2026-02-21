@@ -1,12 +1,17 @@
 package com.usil.aprendeya.ui.screens.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
@@ -30,10 +35,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.usil.aprendeya.R
 import com.usil.aprendeya.ui.theme.Boton
 import com.usil.aprendeya.ui.theme.NavBar
 
@@ -159,6 +169,16 @@ fun BottomBar(
 }
 
 @Composable
+fun HeaderImg() {
+    Image(
+        painter = painterResource(id = R.drawable.portada_login),
+        contentDescription = "Encabezado",
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
 fun LoadingCircle(text: String) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -172,6 +192,66 @@ fun LoadingCircle(text: String) {
             color = Boton,
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun TitleInstructions(
+    title: String,
+    firstLine: String,
+    secondLine: String
+) {
+    Text(
+        text = title,
+        fontSize = 24.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+                .padding(12.dp)
+        ) {
+            Text(
+                text = firstLine,
+                textAlign = TextAlign.Center,
+                maxLines = 3
+            )
+            Text(
+                text = secondLine,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                maxLines = 2
+            )
+        }
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "Logo",
+            modifier = Modifier
+                .weight(0.35f)
+                .aspectRatio(1f)
+                .padding(end = 12.dp)
+        )
+    }
+}
+
+@Composable
+fun EmptyContent(text: String) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = text,
+            fontStyle = FontStyle.Italic
         )
     }
 }
