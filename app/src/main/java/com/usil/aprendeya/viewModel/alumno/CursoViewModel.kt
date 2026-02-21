@@ -2,7 +2,7 @@ package com.usil.aprendeya.viewModel.alumno
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.usil.aprendeya.ui.screens.components.NavigationEvent
+import com.usil.aprendeya.ui.screens.components.AppEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +17,10 @@ class CursoViewModel @Inject constructor() : ViewModel() {
     private val _curso = MutableStateFlow("")
     val curso: StateFlow<String> = _curso.asStateFlow()
 
-    private val _event = MutableSharedFlow<NavigationEvent>()
+    private val _event = MutableSharedFlow<AppEvent>()
     val event = _event.asSharedFlow()
 
     fun onTutoriasSelected() = viewModelScope.launch {
-        _event.emit(NavigationEvent.ToTutoria)
+        _event.emit(AppEvent.ToTutoria)
     }
 }

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.usil.aprendeya.data.response.LoginResult
 import com.usil.aprendeya.domain.repository.AuthRepository
-import com.usil.aprendeya.ui.screens.components.NavigationEvent
+import com.usil.aprendeya.ui.screens.components.AppEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,7 @@ class LoginViewModel @Inject constructor(
     private val _loginError = MutableStateFlow("")
     val loginError: StateFlow<String> = _loginError.asStateFlow()
 
-    private val _event = MutableSharedFlow<NavigationEvent>()
+    private val _event = MutableSharedFlow<AppEvent>()
     val event = _event.asSharedFlow()
 
     fun onLoginChanged(email: String, password: String) {
@@ -49,7 +49,7 @@ class LoginViewModel @Inject constructor(
 
         when (authRepository.login(_email.value, _password.value)) {
             LoginResult.Success -> {
-                _event.emit(NavigationEvent.ToHome)
+                _event.emit(AppEvent.ToHome)
             }
             LoginResult.Error.InvalidCredentials -> {
                 _loginError.value = "Correo o contraseña incorrectos"

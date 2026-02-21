@@ -1,7 +1,13 @@
 package com.usil.aprendeya.ui.navigation
 
+import android.content.Intent
+import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -17,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -32,7 +39,7 @@ import com.usil.aprendeya.ui.screens.alumno.ProfileScreen
 import com.usil.aprendeya.ui.screens.alumno.TutoriaScreen
 import com.usil.aprendeya.ui.screens.components.MainScaffold
 import com.usil.aprendeya.ui.screens.components.NavItem
-import com.usil.aprendeya.ui.screens.components.NavigationEvent
+import com.usil.aprendeya.ui.screens.components.AppEvent
 import com.usil.aprendeya.ui.screens.login.LoginScreen
 import com.usil.aprendeya.viewModel.alumno.CursoViewModel
 import com.usil.aprendeya.viewModel.alumno.HomeViewModel
@@ -40,6 +47,7 @@ import com.usil.aprendeya.viewModel.alumno.ProfileViewModel
 import com.usil.aprendeya.viewModel.alumno.TutoriaViewModel
 import com.usil.aprendeya.viewModel.login.LoginViewModel
 import kotlinx.coroutines.flow.merge
+import androidx.core.net.toUri
 
 @Composable
 fun NavigationWrapper(
@@ -57,19 +65,25 @@ fun NavigationWrapper(
         NavItem("Inicio", Icons.Default.Home),
         NavItem("Perfil", Icons.Default.Person)
     )
+
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+    var previousIndex by rememberSaveable { mutableIntStateOf(0) }
+    var currentCurso by remember { mutableStateOf<Curso?>(null) }
 
     val bottomRoutes = listOf(Home, Profile, Routes.Curso, Routes.Tutoria)
     val topAppRoutes = listOf(Routes.Curso, Routes.Tutoria)
     val showBottomBar = backStack.lastOrNull() in bottomRoutes
     val showTopBar = backStack.lastOrNull() in topAppRoutes
 
-    var currentCurso by remember { mutableStateOf<Curso?>(null) }
+    val context = LocalContext.current
 
     val onBottomItemSelected: (Int) -> Unit = { index ->
-        selectedIndex = index
-        backStack.clear()
-        backStack.add(bottomRoutes[index])
+        if (index != selectedIndex) {
+            previousIndex = selectedIndex
+            selectedIndex = index
+            backStack.clear()
+            backStack.add(bottomRoutes[index])
+        }
     }
 
     val handleBack: () -> Unit = {
@@ -79,32 +93,67 @@ fun NavigationWrapper(
         backStack.removeLastOrNull()
     }
 
+    val screenTransition = NavDisplay.transitionSpec {
+        val isForward = selectedIndex > previousIndex
+        val isBackward = selectedIndex < previousIndex
+
+        when {
+            isForward -> {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(300)
+                ) togetherWith slideOutHorizontally(
+                    targetOffsetX = { -it },
+                    animationSpec = tween(300)
+                )
+            }
+
+            isBackward -> {
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(300)
+                ) togetherWith slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(300)
+                )
+            }
+
+            else -> EnterTransition.None togetherWith ExitTransition.None
+        }
+    }
+
     LaunchedEffect(Unit) {
         merge(
             loginViewModel.event,
             profileViewModel.event,
             homeViewModel.event,
-            cursoViewModel.event
+            cursoViewModel.event,
+            tutoriaViewModel.event
         ).collect { event ->
             when (event) {
-                NavigationEvent.ToHome -> {
+                AppEvent.ToHome -> {
                     backStack.clear()
                     backStack.add(Home)
                 }
 
-                NavigationEvent.ToLogin -> {
+                AppEvent.ToLogin -> {
                     selectedIndex = 0
                     backStack.clear()
                     backStack.add(Login)
                 }
 
-                is NavigationEvent.ToCurso -> {
+                is AppEvent.ToCurso -> {
                     currentCurso = event.curso
                     backStack.add(Routes.Curso)
                 }
 
-                is NavigationEvent.ToTutoria -> {
+                AppEvent.ToTutoria -> {
                     backStack.add(Routes.Tutoria)
+                }
+
+                is AppEvent.OpenLink -> {
+                    val intent = Intent(Intent.ACTION_VIEW, event.url.toUri())
+                    context.startActivity(intent)
                 }
             }
         }
@@ -130,13 +179,13 @@ fun NavigationWrapper(
                 entry<Login> {
                     LoginScreen(loginViewModel)
                 }
-                entry<Home> {
+                entry<Home>(metadata = screenTransition) {
                     HomeScreen(
                         homeViewModel,
                         paddingValues = paddingValues
                     )
                 }
-                entry<Profile> {
+                entry<Profile>(metadata = screenTransition) {
                     ProfileScreen(
                         profileViewModel,
                         paddingValues = paddingValues
@@ -158,33 +207,6 @@ fun NavigationWrapper(
                 entry<Routes.Error> {
                     Text("Error")
                 }
-            },
-            transitionSpec = {
-                slideInHorizontally(
-                    initialOffsetX = { it },
-                    animationSpec = tween(500)
-                ) togetherWith slideOutHorizontally(
-                    targetOffsetX = { -it },
-                    animationSpec = tween(500)
-                )
-            },
-            popTransitionSpec = {
-                slideInHorizontally(
-                    initialOffsetX = { -it },
-                    animationSpec = tween(500)
-                ) togetherWith slideOutHorizontally(
-                    targetOffsetX = { it },
-                    animationSpec = tween(500)
-                )
-            },
-            predictivePopTransitionSpec = {
-                slideInHorizontally(
-                    initialOffsetX = { -it },
-                    animationSpec = tween(500)
-                ) togetherWith slideOutHorizontally(
-                    targetOffsetX = { it },
-                    animationSpec = tween(500)
-                )
             }
         )
     }
