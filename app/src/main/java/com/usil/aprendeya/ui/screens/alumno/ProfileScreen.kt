@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,10 +42,6 @@ fun ProfileScreen(
             .fillMaxSize()
             .padding(paddingValues)
     ) {
-        LaunchedEffect(Unit) {
-            viewModel.event.collect {}
-        }
-
         HeaderImg()
         Box(
             modifier = Modifier
@@ -83,7 +80,7 @@ fun Logout(modifier: Modifier, viewModel: ProfileViewModel) {
 fun Title(modifier: Modifier) {
     Text(
         text = "Mi Perfil",
-        fontSize = 36.sp,
+        style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold,
         modifier = modifier
     )

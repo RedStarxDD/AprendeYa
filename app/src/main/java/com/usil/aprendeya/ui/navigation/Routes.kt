@@ -1,19 +1,28 @@
 package com.usil.aprendeya.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
+import com.usil.aprendeya.data.model.Cuestionario
 import kotlinx.serialization.Serializable
 
-sealed class Routes:NavKey{
+sealed class Routes : NavKey {
     @Serializable
-    data object Login: Routes()
+    data object LoginRoute : Routes()
+
     @Serializable
-    data object Home: Routes()
+    data object HomeRoute : Routes()
+
     @Serializable
-    data object Profile: Routes()
+    data object ProfileRoute : Routes()
+
     @Serializable
-    data object Curso: Routes()
+    data class CursoRoute(val cursoId: String) : Routes()
+
     @Serializable
-    data object Tutoria: Routes()
+    data class TemaRoute(val cursoId: String, val temaId: String) : Routes()
+
     @Serializable
-    data object Error: Routes()
+    data class PreguntaRoute(val cursoId: String, val temaId: String, val cuestionarioId: String) : Routes()
+
+    @Serializable
+    data object ErrorRoute : Routes()
 }
