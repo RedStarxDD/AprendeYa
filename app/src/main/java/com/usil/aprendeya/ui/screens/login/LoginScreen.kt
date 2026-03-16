@@ -12,9 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -29,8 +35,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.usil.aprendeya.R
 import com.usil.aprendeya.ui.screens.components.HeaderImg
 import com.usil.aprendeya.ui.screens.components.LoadingCircle
@@ -43,9 +52,6 @@ fun LoginScreen(viewModel: LoginViewModel) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        LaunchedEffect(Unit) {
-            viewModel.event.collect {}
-        }
         HeaderImg()
         Box(
             Modifier
@@ -64,8 +70,14 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
     val loginEnabled: Boolean by viewModel.loginEnabled.collectAsState()
     val isLoading: Boolean by viewModel.isLoading.collectAsState()
     val loginError: String by viewModel.loginError.collectAsState()
+    val blockVersion by viewModel.blockVersion.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
+    if (blockVersion) {
+        OldVersionAlert {
+            viewModel.closeOldVersionDialog()
+        }
+    }
     if (isLoading) {
         LoadingCircle("Iniciando sesión")
     } else {
@@ -91,10 +103,32 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
 }
 
 @Composable
+fun OldVersionAlert(onDismissRequest: () -> Unit) {
+    AlertDialog(
+        title = {
+            Text(text = "Actualización necesaria")
+        },
+        text = {
+            Text(text = "Usted está usando una versión antigua de la app, por favor actualice a la última versión para la mejor experiencia")
+        },
+        onDismissRequest = {
+            onDismissRequest()
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onDismissRequest() }
+            ) {
+                Text("Entendido")
+            }
+        }
+    )
+}
+
+@Composable
 fun Title(modifier: Modifier) {
     Text(
         text = "Iniciar sesión",
-        fontSize = 36.sp,
+        style = MaterialTheme.typography.headlineMedium,
         fontWeight = FontWeight.Bold,
         modifier = modifier
     )
@@ -106,7 +140,7 @@ fun LoginButton(modifier: Modifier, loginEnabled: Boolean, onLoginSelected: () -
         onClick = { onLoginSelected() },
         modifier = modifier
             .width(200.dp)
-            .height((48.dp)),
+            .height(48.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = VerdeOscuro,
             disabledContainerColor = VerdeOscuro.copy(alpha = 0.25f),
@@ -124,7 +158,7 @@ fun ErrorMessage(errorMessage: String? = null) {
     if (errorMessage != null) {
         Text(
             text = errorMessage,
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.bodyMedium,
             color = Color.Red
         )
     }
@@ -135,7 +169,7 @@ fun ForgotPassword(modifier: Modifier) {
     Text(
         text = "¿Olvidaste la contraseña?",
         modifier = modifier.clickable { throw RuntimeException("Falla") },
-        fontSize = 12.sp,
+        style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Bold,
         color = Color.Red
     )
@@ -146,7 +180,7 @@ fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
     Column {
         Text(
             text = "Contraseña:",
-            fontSize = 18.sp,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.padding(4.dp))
@@ -169,7 +203,7 @@ fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
     Column {
         Text(
             text = "Correo electrónico:",
-            fontSize = 18.sp,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.padding(4.dp))

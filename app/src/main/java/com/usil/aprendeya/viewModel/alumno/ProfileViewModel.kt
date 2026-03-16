@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val repository: AuthRepository
 ) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
@@ -25,7 +25,7 @@ class ProfileViewModel @Inject constructor(
 
     fun logout() = viewModelScope.launch {
         _isLoading.value = true
-        authRepository.logout()
+        repository.logout()
         _event.emit(AppEvent.ToLogin)
         _isLoading.value = false
     }

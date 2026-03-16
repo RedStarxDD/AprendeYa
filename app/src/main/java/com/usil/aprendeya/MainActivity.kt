@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.usil.aprendeya.ui.navigation.NavigationWrapper
 import com.usil.aprendeya.ui.theme.AprendeYaTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @AndroidEntryPoint
