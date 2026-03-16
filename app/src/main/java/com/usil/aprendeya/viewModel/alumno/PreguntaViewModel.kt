@@ -72,8 +72,6 @@ class PreguntaViewModel @Inject constructor(
             if (currentPregunta.value < result.data.size - 1) {
                 _currentPregunta.value++
                 _alternativas.value = mixAlternativas(result.data[currentPregunta.value])
-
-                //if(currentPregunta.value < result.data.size - 1)
             }
         }
     }
